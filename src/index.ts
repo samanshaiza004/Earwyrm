@@ -59,7 +59,7 @@ const app = new Elysia()
         message: '获取所有用户成功',
       }
     }
-    return await tracerFn(ctx, apiFun, 'GET /user')
+    return tracerFn(ctx, apiFun, 'GET /user')
   })
 
 app.listen(8090)
