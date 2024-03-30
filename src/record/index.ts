@@ -29,8 +29,8 @@ export function initializeTracing(serviceName: string): Tracer {
 
 export const tracer = initializeTracing('bun-api')
 
-export async function tracerFn<T>(ctx: Context, apiLogic: () => Promise<T>, desc: string) {
-  return await tracer.startActiveSpan(desc, async (requestSpan) => {
+export function tracerFn<T>(ctx: Context, apiLogic: () => Promise<T>, desc: string) {
+  return tracer.startActiveSpan(desc, async (requestSpan) => {
     try {
       const { data, message } = (await apiLogic()) as ApiRes
       requestSpan.setAttribute('http.status', 200)
