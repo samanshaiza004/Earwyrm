@@ -3,6 +3,7 @@ import { connection } from './collection/mysql'
 import { redis } from './collection/redis'
 import { jwt } from '@elysiajs/jwt'
 import { sendEmail } from './utils/nodemailer'
+import { tracerFn } from './record'
 
 const app = new Elysia()
   .use(
@@ -46,13 +47,19 @@ const app = new Elysia()
       body: t.Object({ randomCode: t.String(), email: t.String() }),
     },
   )
-  .get('/user', async ({ jwt, set, cookie: { auth } }) => {
-    const profile = await jwt.verify(auth.value)
+  .get('/user', async (ctx) => {
+    const profile = await ctx.jwt.verify(ctx.cookie.auth.value)
     if (!profile) {
-      set.status = 401
+      ctx.set.status = 401
       return 'Unauthorized'
     }
-    return connection.user.findMany()
+    async function apiFun() {
+      return {
+        data: await connection.user.findMany(),
+        message: '获取所有用户成功',
+      }
+    }
+    return await tracerFn(ctx, apiFun, 'GET /user')
   })
 
 app.listen(8090)

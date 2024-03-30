@@ -27,16 +27,18 @@ export function initializeTracing(serviceName: string): Tracer {
   return trace.getTracer(serviceName)
 }
 
-export const tracer = initializeTracing('nodejs-koa2')
+export const tracer = initializeTracing('bun-api')
 
-export async function tracerFn<T>(ctx: Context, apiLogic: (ctx: Context) => Promise<T>, desc: string) {
-  await tracer.startActiveSpan(desc, async (requestSpan) => {
+export async function tracerFn<T>(ctx: Context, apiLogic: () => Promise<T>, desc: string) {
+  return await tracer.startActiveSpan(desc, async (requestSpan) => {
     try {
-      const { data, message } = (await apiLogic(ctx)) as ApiRes
+      const { data, message } = (await apiLogic()) as ApiRes
       requestSpan.setAttribute('http.status', 200)
+      requestSpan.setAttribute('http.bun.api', JSON.stringify(ctx))
       return { data, message }
     } catch (e) {
       requestSpan.setAttribute('http.status', 400)
+      requestSpan.setAttribute('http.bun.api', JSON.stringify(ctx))
       throw e
     } finally {
       requestSpan.end()

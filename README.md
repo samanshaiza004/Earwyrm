@@ -29,9 +29,10 @@ bun run dev
 ```
 
 ## Build app
-To start the development server run:
 ```bash
 bun run build
 ```
 
 Open http://localhost:3000/ with your browser to see the result.
+
+Open http://localhost:16686 with your browser to see the `jaeger` info.
