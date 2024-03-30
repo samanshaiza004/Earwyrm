@@ -2,7 +2,7 @@ import { Elysia, t } from 'elysia'
 import { connection } from './collection/mysql'
 import { redis } from './collection/redis'
 import { jwt } from '@elysiajs/jwt'
-import { sendEmail } from '../utils/nodemailer'
+import { sendEmail } from './utils/nodemailer'
 
 const app = new Elysia()
   .use(
