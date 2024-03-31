@@ -30,6 +30,7 @@ const app = new Elysia()
             value: token,
             httpOnly: true,
             maxAge: 7 * 86400,
+            path: '/',
           })
           return { data: token }
         } else {
