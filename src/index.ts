@@ -4,8 +4,12 @@ import { redis } from './collection/redis'
 import { jwt } from '@elysiajs/jwt'
 import { sendEmail } from './utils/nodemailer'
 import { tracerFn } from './record'
+import { cors } from '@elysiajs/cors'
+import { bearer } from '@elysiajs/bearer'
 
 const app = new Elysia()
+  .use(cors({ origin: 'localhost:8082' }))
+  .use(bearer())
   .use(
     jwt({
       name: 'jwt',
@@ -31,6 +35,7 @@ const app = new Elysia()
             httpOnly: true,
             maxAge: 7 * 86400,
             path: '/',
+            domain: 'localhost',
           })
           return { data: token }
         } else {
@@ -49,7 +54,7 @@ const app = new Elysia()
     },
   )
   .get('/user', async (ctx) => {
-    const profile = await ctx.jwt.verify(ctx.cookie.auth.value)
+    const profile = await ctx.jwt.verify(ctx.bearer)
     if (!profile) {
       ctx.set.status = 401
       return 'Unauthorized'

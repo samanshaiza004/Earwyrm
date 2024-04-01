@@ -11,6 +11,8 @@
     "prisma:push": "prisma db push && prisma generate"
   },
   "dependencies": {
+    "@elysiajs/bearer": "^1.0.2",
+    "@elysiajs/cors": "^1.0.2",
     "@elysiajs/jwt": "^1.0.2",
     "@opentelemetry/api": "^1.8.0",
     "@opentelemetry/exporter-jaeger": "^1.22.0",
