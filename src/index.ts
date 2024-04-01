@@ -19,7 +19,7 @@ const app = new Elysia()
   )
   .post(
     '/authority/login',
-    async ({ jwt, cookie: { auth }, body }) => {
+    async ({ jwt, body }) => {
       const { email, randomCode } = body
       const preRandomCode = await redis.get(email)
       if (preRandomCode) {
@@ -30,14 +30,7 @@ const app = new Elysia()
             create: { email, name: `用户${randomCode}` },
           })
           const token = await jwt.sign({ email })
-          auth.set({
-            value: token,
-            httpOnly: true,
-            maxAge: 7 * 86400,
-            path: '/',
-            domain: 'localhost',
-          })
-          return { data: token }
+          return { data: { token } }
         } else {
           throw new Error('验证码错误,请60s后重新获取。')
         }
