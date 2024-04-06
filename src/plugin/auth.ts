@@ -31,3 +31,7 @@ export const auth = ({ exclude }: AuthOptions) =>
         }
       }
     })
+    .derive({ as: 'global' }, async ({ bearer, jwt }) => {
+      const tokenPayload = await jwt.verify(bearer)
+      return { tokenPayload }
+    })

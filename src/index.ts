@@ -39,6 +39,7 @@ const app = new Elysia()
     },
   )
   .get('/user', async (ctx) => {
+    console.log(ctx.tokenPayload)
     async function apiFun() {
       return {
         data: await connection.user.findMany(),
