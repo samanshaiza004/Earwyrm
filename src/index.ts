@@ -1,22 +1,14 @@
 import { Elysia, t } from 'elysia'
 import { connection } from './collection/mysql'
 import { redis } from './collection/redis'
-import { jwt } from '@elysiajs/jwt'
 import { sendEmail } from './utils/nodemailer'
 import { tracerFn } from './record'
 import { cors } from '@elysiajs/cors'
-import { bearer } from '@elysiajs/bearer'
+import { auth } from './plugin/auth'
 
 const app = new Elysia()
   .use(cors({ origin: 'localhost:8082' }))
-  .use(bearer())
-  .use(
-    jwt({
-      name: 'jwt',
-      secret: process.env.JWT_SECRETS!,
-      exp: '7d',
-    }),
-  )
+  .use(auth({ exclude: ['/login'] }))
   .post(
     '/authority/login',
     async ({ jwt, body }) => {
@@ -47,18 +39,13 @@ const app = new Elysia()
     },
   )
   .get('/user', async (ctx) => {
-    const profile = await ctx.jwt.verify(ctx.bearer)
-    if (!profile) {
-      ctx.set.status = 401
-      return 'Unauthorized'
-    }
     async function apiFun() {
       return {
         data: await connection.user.findMany(),
         message: '获取所有用户成功',
       }
     }
-    return tracerFn(ctx, apiFun, 'GET /user')
+    return tracerFn(ctx, apiFun)
   })
 
 app.listen(8090)
