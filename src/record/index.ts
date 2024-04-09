@@ -32,14 +32,14 @@ export const tracer = initializeTracing('bun-api')
 export function tracerFn<T>(ctx: Context, apiLogic: () => Promise<T>) {
   return tracer.startActiveSpan(`${ctx.request.method} ${ctx.path}`, async (requestSpan) => {
     try {
-      const { data, message } = (await apiLogic()) as ApiRes
+      const data = (await apiLogic()) as ApiRes
       requestSpan.setAttribute('http.status', 200)
       requestSpan.setAttribute('http.bun.api', JSON.stringify(ctx))
-      return { data, message }
+      return data
     } catch (e) {
       requestSpan.setAttribute('http.status', 400)
       requestSpan.setAttribute('http.bun.api', JSON.stringify(ctx))
-      throw e
+      return ctx.error(400, e)
     } finally {
       requestSpan.end()
     }
