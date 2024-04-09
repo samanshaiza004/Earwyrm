@@ -4,8 +4,8 @@ import { SimpleSpanProcessor, ConsoleSpanExporter } from '@opentelemetry/sdk-tra
 import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node'
 import { trace, Tracer } from '@opentelemetry/api'
 import { JaegerExporter } from '@opentelemetry/exporter-jaeger'
-import { ApiRes } from '../types/type.global'
 import { Context } from 'elysia'
+import { ApiRes } from '../types/type.global'
 
 export function initializeTracing(serviceName: string): Tracer {
   const provider = new NodeTracerProvider({
@@ -29,10 +29,10 @@ export function initializeTracing(serviceName: string): Tracer {
 
 export const tracer = initializeTracing('bun-api')
 
-export function tracerFn<T>(ctx: Context, apiLogic: () => Promise<T>) {
+export function tracerFn<T extends ApiRes>(ctx: Context, apiLogic: () => Promise<T>) {
   return tracer.startActiveSpan(`${ctx.request.method} ${ctx.path}`, async (requestSpan) => {
     try {
-      const data = (await apiLogic()) as ApiRes
+      const data = await apiLogic()
       requestSpan.setAttribute('http.status', 200)
       requestSpan.setAttribute('http.bun.api', JSON.stringify(ctx))
       return data
