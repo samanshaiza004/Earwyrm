@@ -21,6 +21,8 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
 | express       | bun     | 29,715.537  | 39,455.46  | 34,700.85          | 14,990.3   |
 | express       | node    | 15,913.153  | 17,736.92  | 17,128.7           | 12,873.84  |
 
+![2024-05-06 12.51.00.png](https://s2.loli.net/2024/05/06/1TDsQYSHNvngmw9.png)
+
 
 ## Development
 To start the development server run:
