@@ -24,6 +24,11 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
 
 ## Development
 To start the development server run:
+
+```docker
+docker-compose up -d
+```
+
 ```bash
 bun run dev
 ```
