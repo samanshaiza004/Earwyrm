@@ -29,17 +29,18 @@ export function initializeTracing(serviceName: string): Tracer {
 
 export const tracer = initializeTracing('bun-api')
 
-export function tracerFn<T extends ApiRes>(ctx: Context, apiLogic: () => Promise<T>) {
+export function tracerFn<T extends ApiRes>(ctx: any, apiLogic: () => Promise<T>) {
   return tracer.startActiveSpan(`${ctx.request.method} ${ctx.path}`, async (requestSpan) => {
+    const inCtx = ctx as Context
     try {
       const data = await apiLogic()
       requestSpan.setAttribute('http.status', 200)
-      requestSpan.setAttribute('http.bun.api', JSON.stringify(ctx))
+      requestSpan.setAttribute('http.bun.api', JSON.stringify(inCtx))
       return data
     } catch (e) {
       requestSpan.setAttribute('http.status', 400)
-      requestSpan.setAttribute('http.bun.api', JSON.stringify(ctx))
-      return ctx.error(400, e)
+      requestSpan.setAttribute('http.bun.api', JSON.stringify(inCtx))
+      return inCtx.error(400, e)
     } finally {
       requestSpan.end()
     }

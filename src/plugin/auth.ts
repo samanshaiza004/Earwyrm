@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia'
 import { bearer } from '@elysiajs/bearer'
-import { jwt } from '@elysiajs/jwt'
+import { jwt, JWTPayloadSpec } from '@elysiajs/jwt'
 import { connection } from '../collection/mysql'
 
 interface AuthOptions {
@@ -33,8 +33,8 @@ export const auth = ({ exclude }: AuthOptions) =>
       }
     })
     .derive({ as: 'global' }, async ({ bearer, jwt }) => {
-      const tokenPayload = (await jwt.verify(bearer)) as { email: string }
+      const tokenPayload = (await jwt.verify(bearer)) as { email: string | undefined }
       const email = tokenPayload.email
-      const userInfo = await connection.user.findUnique({ where: { email } })
+      const userInfo = email ? await connection.user.findUnique({ where: { email } }) : null
       return { userInfo }
     })

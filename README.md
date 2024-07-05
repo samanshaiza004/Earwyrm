@@ -23,12 +23,19 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
 
 ![2024-05-06 12.51.00.png](https://s2.loli.net/2024/05/06/1TDsQYSHNvngmw9.png)
 
+## Api docs
+![_6-7-2024_2148_localhost.jpeg](https://s2.loli.net/2024/07/06/POZSw2aNh1D8LQY.jpg)
+
 
 ## Development
 To start the development server run:
 
 ```docker
 docker-compose up -d
+```
+
+```docker
+pnpm prisma:push
 ```
 
 ```bash
@@ -40,6 +47,10 @@ bun run dev
 bun run build
 ```
 
-Open http://localhost:3000/ with your browser to see the result.
+Open http://localhost:8090/ with your browser to see the result.
+
+Open http://localhost:8090/swagger with your browser to see the swagger.
 
 Open http://localhost:16686 with your browser to see the `jaeger` info.
+
+
