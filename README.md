@@ -34,16 +34,16 @@ To start the development server run:
 docker-compose up -d
 ```
 
-```docker
-pnpm prisma:push
+```shell
+bun run prisma:push
 ```
 
-```bash
+```shell
 bun run dev
 ```
 
 ## Build app
-```bash
+```shell
 bun run build
 ```
 
