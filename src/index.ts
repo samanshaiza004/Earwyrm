@@ -2,10 +2,11 @@ import { Elysia, t } from 'elysia'
 import { connection } from './collection/mysql'
 import { redis } from './collection/redis'
 import { sendEmail } from './utils/nodemailer'
-import { tracerFn } from './record'
+// import { tracerFn } from './record'
 import { cors } from '@elysiajs/cors'
 import { auth } from './plugin/auth'
 import { swagger } from '@elysiajs/swagger'
+import { User } from '@prisma/client'
 
 const app = new Elysia()
   .use(cors({ origin: 'localhost:8082' }))
@@ -33,7 +34,6 @@ const app = new Elysia()
         const randomCode = (Math.random() * 1000000).toFixed(0)
         redis.set(email, randomCode, 'EX', 60)
         await sendEmail('test', '本次登录验证码是' + randomCode, email)
-        // return { data: { randomCode }, message: '获取验证码成功' }
         return { data: randomCode, message: '获取验证码成功' }
       }
     },
@@ -45,23 +45,18 @@ const app = new Elysia()
   .get(
     '/user',
     async (ctx) => {
-      console.log(ctx.userInfo)
-      async function apiFun() {
-        return {
-          data: await connection.user.findMany(),
-          message: '获取所有用户成功',
-        }
+      const userInfo = ctx.userInfo as User // The ‘auth’ plugin has processed the situation where userInfo is not available.
+      console.log(userInfo)
+      return {
+        data: await connection.user.findMany(),
+        message: '获取所有用户成功',
       }
-      return tracerFn(ctx, apiFun)
     },
     {
-      response: {
-        200: t.Object({
-          data: t.Array(t.Object({ id: t.Number(), email: t.String(), name: t.Nullable(t.String()) })),
-          message: t.String(),
-        }),
-        400: t.Object({}),
-      },
+      response: t.Object({
+        data: t.Array(t.Object({ id: t.Number(), email: t.String(), name: t.Nullable(t.String()) })),
+        message: t.String(),
+      }),
     },
   )
 
