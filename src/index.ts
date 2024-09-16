@@ -6,7 +6,6 @@ import { sendEmail } from './utils/nodemailer'
 import { cors } from '@elysiajs/cors'
 import { auth } from './plugin/auth'
 import { swagger } from '@elysiajs/swagger'
-import { User } from '@prisma/client'
 
 const app = new Elysia()
   .use(cors({ origin: 'localhost:8082' }))
@@ -45,7 +44,7 @@ const app = new Elysia()
   .get(
     '/user',
     async (ctx) => {
-      const userInfo = ctx.userInfo as User // The ‘auth’ plugin has processed the situation where userInfo is not available.
+      const userInfo = ctx.userInfo // The ‘auth’ plugin has processed the situation where userInfo is not available.
       console.log(userInfo)
       return {
         data: await connection.user.findMany(),
