@@ -3,12 +3,12 @@ import { connection } from './collection/mysql'
 import { redis } from './collection/redis'
 import { sendEmail } from './utils/nodemailer'
 // import { tracerFn } from './record'
-import { cors } from '@elysiajs/cors'
+// import { cors } from '@elysiajs/cors'
 import { auth } from './plugin/auth'
 import { swagger } from '@elysiajs/swagger'
 
 const app = new Elysia()
-  .use(cors({ origin: 'localhost:8082' }))
+  // .use(cors({ origin: 'localhost:5173' }))
   .use(swagger())
   .use(auth({ exclude: ['/login'] }))
   .post(

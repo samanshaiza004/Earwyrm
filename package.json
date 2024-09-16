@@ -2,9 +2,11 @@
   "name": "bun-api",
   "version": "1.0.50",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts",
-    "build": "bun build src/index.ts --outdir ./dist",
+    "dev:server": "bun run --watch src/backend/index.ts",
+    "dev:client": "cd src/frontend && bun run dev",
+    "build:server": "bun build src/index.ts --outdir ./dist",
+    "build:client": "cd src/frontend && tsc && vite build",
+    "preview": "cd src/frontend && vite preview",
     "start": "NODE_ENV=production bun src/index.ts",
     "prisma:new": "prisma migrate dev && prisma generate",
     "prisma:pull": "prisma db pull && prisma generate",
@@ -22,15 +24,22 @@
     "@opentelemetry/sdk-trace-node": "^1.22.0",
     "@opentelemetry/semantic-conventions": "^1.22.0",
     "@prisma/client": "^5.11.0",
+    "axios": "^1.7.7",
     "elysia": "latest",
     "ioredis": "^5.3.2",
-    "nodemailer": "^6.9.13"
+    "nodemailer": "^6.9.13",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/nodemailer": "^6.4.14",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "@vitejs/plugin-react-swc": "^3.0.0",
     "bun-types": "latest",
     "prettier": "^3.2.5",
-    "prisma": "^5.11.0"
-  },
-  "module": "src/index.js"
+    "prisma": "^5.11.0",
+    "unplugin-auto-import": "^0.18.3",
+    "vite": "^4.0.0"
+  }
 }
