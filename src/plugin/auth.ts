@@ -37,5 +37,7 @@ export const auth = ({ exclude }: AuthOptions) =>
       if (email) {
         const userInfo = await connection.user.findUnique({ where: { email } })
         return { userInfo }
+      } else {
+        return {}
       }
     })
