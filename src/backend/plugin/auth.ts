@@ -13,7 +13,7 @@ export const auth = ({ exclude }: AuthOptions) =>
     .use(
       jwt({
         name: 'jwt',
-        secret: process.env.JWT_SECRETS!,
+        secret: Bun.env.JWT_SECRETS!,
       }),
     )
     .onBeforeHandle({ as: 'global' }, async (ctx) => {

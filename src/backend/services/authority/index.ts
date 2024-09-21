@@ -4,7 +4,7 @@ import { connection } from '../../collection/mysql'
 import { sendEmail } from '../../utils/nodemailer'
 import { auth } from '../../plugin/auth'
 
-export const authorityService = new Elysia().use(auth({ exclude: ['/login'] })).post(
+export const authorityService = new Elysia().use(auth({ exclude: ['/authority/login'] })).post(
   '/authority/login',
   async ({ jwt, body }) => {
     const { email, randomCode } = body
