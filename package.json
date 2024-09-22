@@ -1,15 +1,16 @@
 {
-  "name": "bun-api",
+  "name": "fullstack-for-bun-api",
   "version": "1.0.50",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "dev": "bun --filter '*' dev",
-    "build": "bun --filter '*' build"
+    "build": "bun --filter '*' build",
+    "frontend": "bun --filter frontend",
+    "backend": "bun --filter bun-api"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "prettier": "^3.2.5"
   }

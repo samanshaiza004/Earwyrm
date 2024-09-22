@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import server from '@/server'
+import { Button } from '@components/ui/button'
+import { Input } from '@components/ui/input'
 
 const EmailLogin = () => {
   // 邮箱和验证码状态
@@ -44,9 +46,9 @@ const EmailLogin = () => {
         >
           <label>
             邮箱:
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
-          <button type="submit">发送验证码</button>
+          <Button type="submit">发送验证码</Button>
         </form>
       ) : (
         <form
@@ -57,12 +59,12 @@ const EmailLogin = () => {
         >
           <label>
             验证码:
-            <input type="text" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
+            <Input type="text" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
           </label>
-          <button type="submit">登录</button>
-          <button type="button" onClick={() => setIsRequestingCode(true)}>
+          <Button type="submit">登录</Button>
+          <Button type="button" onClick={() => setIsRequestingCode(true)}>
             重新发送验证码
-          </button>
+          </Button>
         </form>
       )}
     </div>
