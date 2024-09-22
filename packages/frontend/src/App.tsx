@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import './App.css'
 import server from '@/server'
 import EmailLogin from '@components/EmailLogin'
