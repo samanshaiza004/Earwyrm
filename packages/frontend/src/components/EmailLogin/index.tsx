@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import server from '@/server'
+import server from '@/lib/server'
 import { Button } from '@components/ui/button'
 import { Input } from '@components/ui/input'
 

@@ -1,5 +1,5 @@
 import './App.css'
-import server from '@/server'
+import server from '@/lib/server'
 import EmailLogin from '@components/EmailLogin'
 import { User } from '@prisma/client'
 
