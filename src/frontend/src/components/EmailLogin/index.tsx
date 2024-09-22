@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import server from '@/network'
+import server from '@/server'
 
 const EmailLogin = () => {
   // 邮箱和验证码状态

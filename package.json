@@ -2,9 +2,9 @@
   "name": "bun-api",
   "version": "1.0.50",
   "scripts": {
-    "dev:server": "bun run --watch src/backend/index.ts",
+    "dev:server": "cd src/backend && bun run --watch src/index.ts",
     "dev:client": "cd src/frontend && bun run vite",
-    "build:server": "bun build src/index.ts --outdir ./dist",
+    "build:server": "cd src/backend && bun build src/index.ts --outdir ./dist",
     "build:client": "cd src/frontend && tsc && vite build",
     "preview": "cd src/frontend && vite preview",
     "start": "NODE_ENV=production bun src/index.ts",

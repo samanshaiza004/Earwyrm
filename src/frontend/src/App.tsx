@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import server from '@/network'
+import server from '@/server'
 import EmailLogin from '@components/EmailLogin'
 import { User } from '@prisma/client'
 

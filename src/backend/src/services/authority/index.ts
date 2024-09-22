@@ -25,7 +25,7 @@ export const authorityService = new Elysia().use(auth({ exclude: ['/authority/lo
       const randomCode = (Math.random() * 1000000).toFixed(0)
       redis.set(email, randomCode, 'EX', 60)
       await sendEmail('test', '本次登录验证码是' + randomCode, email)
-      return randomCode
+      return '获取验证码成功，请到你的邮箱查看。'
     }
   },
   {
