@@ -14,7 +14,7 @@ export function sendEmail(title: string, content: string, toMail: string) {
     },
   })
   const mailOptions: Mail.Options = {
-    from: { name: 'koa-test', address: Bun.env.NODEMAILER_AUTH_EMAIL as string }, // 发送方
+    from: { name: 'bun-api', address: Bun.env.NODEMAILER_AUTH_EMAIL }, // 发送方
     to: toMail, //接收者邮箱，多个邮箱用逗号间隔
     subject: title, // 标题
     html: `<div>${content}</div>`, //页面内容

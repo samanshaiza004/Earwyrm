@@ -1,7 +1,5 @@
-import React, { useState, useCallback } from 'react'
 import server from '@/lib/server'
-import { Button } from '@components/ui/button'
-import { Input } from '@components/ui/input'
+import { Button, Input } from '@components/ui'
 
 const EmailLogin = () => {
   // 邮箱和验证码状态
@@ -71,4 +69,6 @@ const EmailLogin = () => {
   )
 }
 
-export default EmailLogin
+EmailLogin.displayName = 'EmailLogin'
+
+export { EmailLogin }

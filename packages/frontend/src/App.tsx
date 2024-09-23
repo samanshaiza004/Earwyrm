@@ -1,6 +1,6 @@
 import './App.css'
 import server from '@/lib/server'
-import EmailLogin from '@components/molecules/EmailLogin'
+import { EmailLogin } from '@components/molecules'
 import { User } from '@prisma/client'
 
 function App() {
