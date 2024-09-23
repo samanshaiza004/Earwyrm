@@ -69,6 +69,4 @@ const EmailLogin = () => {
   )
 }
 
-EmailLogin.displayName = 'EmailLogin'
-
 export { EmailLogin }
