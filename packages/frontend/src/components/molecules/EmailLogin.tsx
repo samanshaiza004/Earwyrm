@@ -10,7 +10,7 @@ const EmailLogin = () => {
 
   // 发送验证码的函数（这里仅模拟）
   const requestVerificationCode = useCallback(async () => {
-    await server.authority.login.post({ email: email })
+    await server.authority.get_verification_code.post({ email })
     console.log(`验证码已发送到邮箱: ${email}`)
     // 这里应该是调用API发送验证码到邮箱的逻辑
     setIsRequestingCode(false) // 切换到验证码输入表单
