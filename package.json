@@ -4,6 +4,11 @@
   "workspaces": [
     "packages/*"
   ],
+  "trustedDependencies": [
+    "@prisma/client",
+    "@prisma/engines",
+    "prisma"
+  ],
   "scripts": {
     "dev": "bun --filter '*' dev",
     "build": "bun --filter '*' build",

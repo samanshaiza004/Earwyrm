@@ -12,7 +12,7 @@ function App() {
           localStorage.removeItem('token')
           return location.reload()
         }
-        setUsers(res.data || [])
+        setUsers(res.data)
       })
     }
   }, [])

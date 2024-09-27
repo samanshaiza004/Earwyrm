@@ -19,9 +19,10 @@ const EmailLogin = () => {
   // 登录函数（这里仅模拟）
   const login = useCallback(async () => {
     if (verificationCode) {
-      const { data } = await server.authority.login.post({ email: email, randomCode: verificationCode })
-      // @ts-ignore
-      localStorage.setItem('token', data)
+      const { data, error } = await server.authority.login.post({ email: email, randomCode: verificationCode })
+      if (!error) {
+        localStorage.setItem('token', data)
+      }
       console.log('登录成功!')
       location.reload()
     } else {
