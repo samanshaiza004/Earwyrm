@@ -12,8 +12,11 @@
   "scripts": {
     "dev": "bun --filter '*' dev",
     "build": "bun --filter '*' build",
-    "frontend": "bun --filter frontend",
-    "backend": "bun --filter bun-api"
+    "frontend": "bun run --filter frontend",
+    "backend": "bun run --filter bun-api",
+    "prisma:new": "bun backend prisma:new",
+    "prisma:pull": "bun backend prisma:pull",
+    "prisma:push": "bun backend prisma:push",
   },
   "dependencies": {},
   "devDependencies": {
