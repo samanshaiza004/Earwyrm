@@ -30,7 +30,7 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
 
 - Bun workspaces
 
-  项目结构
+ Project structure
 
   ```
   .
@@ -43,7 +43,7 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
           └── package.json
   ```
 
-  让workspace生效需要配置
+  Configuration is required for Workspace to take effect
 
   ```json
   {
