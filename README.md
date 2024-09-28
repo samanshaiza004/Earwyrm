@@ -121,10 +121,10 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
         if (!error) {
           localStorage.setItem('token', data)
         }
-        console.log('登录成功!')
+        console.log('Login successful!')
         location.reload()
       } else {
-        console.log('请输入验证码!')
+        console.log('Please enter a verification code!')
       }
     }, [verificationCode, email])
   ```

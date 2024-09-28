@@ -2,31 +2,26 @@ import server from '@/lib/server'
 import { Button, Input } from '@components/ui'
 
 const EmailLogin = () => {
-  // 邮箱和验证码状态
   const [email, setEmail] = useState('')
   const [verificationCode, setVerificationCode] = useState('')
-  // 控制显示哪个表单
   const [isRequestingCode, setIsRequestingCode] = useState(true)
 
-  // 发送验证码的函数（这里仅模拟）
   const requestVerificationCode = useCallback(async () => {
     await server.authority.get_verification_code.post({ email })
-    console.log(`验证码已发送到邮箱: ${email}`)
-    // 这里应该是调用API发送验证码到邮箱的逻辑
-    setIsRequestingCode(false) // 切换到验证码输入表单
+    console.log(`A verification code has been sent to your email: ${email}`)
+    setIsRequestingCode(false)
   }, [email])
 
-  // 登录函数（这里仅模拟）
   const login = useCallback(async () => {
     if (verificationCode) {
       const { data, error } = await server.authority.login.post({ email: email, randomCode: verificationCode })
       if (!error) {
         localStorage.setItem('token', data)
       }
-      console.log('登录成功!')
+      console.log('Login successful!')
       location.reload()
     } else {
-      console.log('请输入验证码!')
+      console.log('Please enter a verification code!')
     }
   }, [verificationCode, email])
 
@@ -39,15 +34,15 @@ const EmailLogin = () => {
             if (email.includes('@')) {
               requestVerificationCode()
             } else {
-              alert('请输入有效的邮箱地址！')
+              alert('Please enter a valid email address！')
             }
           }}
         >
           <label>
-            邮箱:
+            email:
             <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
-          <Button type="submit">发送验证码</Button>
+          <Button type="submit">Send a verification code</Button>
         </form>
       ) : (
         <form
@@ -57,12 +52,12 @@ const EmailLogin = () => {
           }}
         >
           <label>
-            验证码:
+            verification code:
             <Input type="text" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
           </label>
           <Button type="submit">登录</Button>
           <Button type="button" onClick={() => setIsRequestingCode(true)}>
-            重新发送验证码
+            Resend the verification code
           </Button>
         </form>
       )}

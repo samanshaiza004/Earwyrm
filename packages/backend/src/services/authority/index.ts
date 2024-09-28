@@ -13,8 +13,8 @@ export const authorityService = new Elysia()
       const { email } = body
       const randomCode = (Math.random() * 1000000).toFixed(0)
       redis.set(email, randomCode, 'EX', 60)
-      await sendEmail('test', '本次登录验证码是' + randomCode, email)
-      return '获取验证码成功，请到你的邮箱查看。'
+      await sendEmail('test', 'The login verification code for this time is' + randomCode, email)
+      return 'The verification code was successfully obtained, please check it in your mailbox.'
     },
     {
       body: t.Object({ email: t.String() }),
@@ -26,7 +26,7 @@ export const authorityService = new Elysia()
       const { email, randomCode } = body
       const preRandomCode = await redis.get(email)
       if (!preRandomCode) {
-        return error(400, '请先获取验证码')
+        return error(400, 'Please get a verification code first.')
       }
       if (randomCode === preRandomCode) {
         await connection.user.upsert({
@@ -36,7 +36,10 @@ export const authorityService = new Elysia()
         })
         return await jwt.sign({ email })
       } else {
-        return error(400, '验证码错误,请核对你的邮箱验证码，或者60s后重新获取。')
+        return error(
+          400,
+          'The verification code is incorrect, please check your email verification code, or get it again after 60s.',
+        )
       }
     },
     {
