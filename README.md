@@ -26,8 +26,111 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
 ## Api docs
 ![_6-7-2024_2148_localhost.jpeg](https://s2.loli.net/2024/07/06/POZSw2aNh1D8LQY.jpg)
 
+## Full stack development
+
+- Bun workspaces
+
+  项目结构
+
+  ```
+  .
+  ├── package.json
+  ├── node_modules
+  └── packages
+      ├── frontend
+      │   └── package.json
+      └── backend
+          └── package.json
+  ```
+
+  让workspace生效需要配置
+
+  ```json
+  {
+    "name": "fullstack-for-bun-api",
+    "version": "1.0.50",
+    "workspaces": [
+      "packages/*"
+    ],
+    "trustedDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "prisma"
+    ],
+    "scripts": {
+      "dev": "bun --filter '*' dev",
+      "build": "bun --filter '*' build",
+      "frontend": "bun run --filter frontend",
+      "backend": "bun run --filter bun-api",
+      "prisma:new": "bun backend prisma:new",
+      "prisma:pull": "bun backend prisma:pull",
+      "prisma:push": "bun backend prisma:push"
+    },
+    "dependencies": {},
+    "devDependencies": {
+      "prettier": "^3.2.5"
+    }
+  }
+  ```
+
+- Backend
+
+  ```ts
+  import { Elysia } from 'elysia'
+  // import { tracerFn } from './record'
+  import { cors } from '@elysiajs/cors'
+  import { swagger } from '@elysiajs/swagger'
+  import { authorityService, userService } from './services'
+  
+  const app = new Elysia()
+    .use(cors({ origin: 'localhost:5173' }))
+    .use(swagger())
+    .use(authorityService)
+    .use(userService)
+  
+  app.listen(8090)
+  
+  export type App = typeof app
+  ```
+
+  
+
+- Frontend
+
+  lib/server.ts
+
+  ```ts
+  import { treaty } from '@elysiajs/eden'
+  import type { App } from 'bun-api' // bun api form workspace 'bun-api' ,that is your backend project.
+  const server = treaty<App>('localhost:8090', {
+    headers: [() => ({ authorization: `Bearer ${localStorage.getItem('token')}` })],
+  })
+  export default server // whole type for client request.
+  ```
+
+  Use
+
+  ```tsx
+  import server from '@/lib/server'
+  
+  // in react
+    const login = useCallback(async () => {
+      if (verificationCode) {
+        // He is a complete input and output parameter type prompt.
+        const { data, error } = await server.authority.login.post({ email: email, randomCode: verificationCode })
+        if (!error) {
+          localStorage.setItem('token', data)
+        }
+        console.log('登录成功!')
+        location.reload()
+      } else {
+        console.log('请输入验证码!')
+      }
+    }, [verificationCode, email])
+  ```
 
 ## Development
+
 To start the development server run:
 
 ```docker
@@ -52,5 +155,4 @@ Open http://localhost:8090/ with your browser to see the result.
 Open http://localhost:8090/swagger with your browser to see the swagger.
 
 Open http://localhost:16686 with your browser to see the `jaeger` info.
-
 
