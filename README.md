@@ -101,7 +101,8 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
 
   ```ts
   import { treaty } from '@elysiajs/eden'
-  import type { App } from 'bun-api' // bun api form workspace 'bun-api' ,that is your backend project.
+  // "bun-api" form workspace 'bun-api' ,that is your backend project.
+  import type { App } from 'bun-api'
   const server = treaty<App>('localhost:8090', {
     headers: [() => ({ authorization: `Bearer ${localStorage.getItem('token')}` })],
   })
