@@ -1,9 +1,10 @@
 import { Elysia, t } from 'elysia'
-import { redis } from '../../collection/redis'
+
 import { connection } from '../../collection/mysql'
-import { sendEmail } from '../../utils/nodemailer'
+import { redis } from '../../collection/redis'
 import { auth } from '../../plugin/auth'
 import { ignoreAuthPath } from '../../utils/configs'
+import { sendEmail } from '../../utils/nodemailer'
 
 export const authorityService = new Elysia()
   .use(auth({ exclude: ignoreAuthPath }))

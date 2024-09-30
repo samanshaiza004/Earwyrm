@@ -1,0 +1,10 @@
+{
+  "env": {
+    "browser": true
+  },
+  "extends": [
+    ".eslintrc-auto-import.json",
+    "code-style-lint-react-ts"
+  ],
+  "rules": {}
+}

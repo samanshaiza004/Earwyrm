@@ -1,3 +1,3 @@
 export * from './alert'
-export * from './input'
 export * from './button'
+export * from './input'

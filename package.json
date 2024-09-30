@@ -12,6 +12,7 @@
   "scripts": {
     "dev": "bun --filter '*' dev",
     "build": "bun --filter '*' build",
+    "lint": "bun --filter '*' lint",
     "frontend": "bun run --filter frontend",
     "backend": "bun run --filter bun-api",
     "prisma:new": "bun backend prisma:new",

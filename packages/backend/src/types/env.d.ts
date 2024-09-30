@@ -1,4 +1,4 @@
-module 'bun' {
+declare module 'bun' {
   interface Env {
     MYSQL_DATABASE_URL: string
     JWT_SECRETS: string

@@ -1,6 +1,7 @@
-import { Elysia } from 'elysia'
 import { bearer } from '@elysiajs/bearer'
 import { jwt } from '@elysiajs/jwt'
+import { Elysia } from 'elysia'
+
 import { connection } from '../collection/mysql'
 
 interface AuthOptions {

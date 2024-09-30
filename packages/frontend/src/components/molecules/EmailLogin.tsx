@@ -1,5 +1,6 @@
-import server from '@/lib/server'
 import { Button, Input } from '@components/ui'
+
+import server from '@/lib/server'
 
 const EmailLogin = () => {
   const [email, setEmail] = useState('')

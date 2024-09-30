@@ -8,19 +8,14 @@
     "start": "NODE_ENV=production bun src/index.ts",
     "prisma:new": "prisma migrate dev && prisma generate",
     "prisma:pull": "prisma db pull && prisma generate",
-    "prisma:push": "prisma db push && prisma generate"
+    "prisma:push": "prisma db push && prisma generate",
+    "lint": "tsc && eslint . --ext .js,.ts,.jsx,.tsx --fix"
   },
   "dependencies": {
     "@elysiajs/bearer": "^1.0.2",
     "@elysiajs/cors": "^1.0.2",
     "@elysiajs/jwt": "^1.0.2",
     "@elysiajs/swagger": "^1.0.5",
-    "@opentelemetry/api": "^1.8.0",
-    "@opentelemetry/exporter-jaeger": "^1.22.0",
-    "@opentelemetry/resources": "^1.22.0",
-    "@opentelemetry/sdk-trace-base": "^1.22.0",
-    "@opentelemetry/sdk-trace-node": "^1.22.0",
-    "@opentelemetry/semantic-conventions": "^1.22.0",
     "@prisma/client": "^5.11.0",
     "elysia": "latest",
     "ioredis": "^5.3.2",
@@ -30,6 +25,8 @@
     "@types/nodemailer": "^6.4.14",
     "@vitejs/plugin-react-swc": "^3.0.0",
     "bun-types": "latest",
+    "eslint": "^8.57.1",
+    "eslint-config-code-style-lint-ts": "^3.1.1",
     "prisma": "^5.11.0"
   }
 }

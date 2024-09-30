@@ -1,7 +1,9 @@
 import './App.css'
-import server from '@/lib/server'
+
 import { EmailLogin } from '@components/molecules'
 import { User } from '@prisma/client'
+
+import server from '@/lib/server'
 
 function App() {
   const [users, setUsers] = useState<User[]>([])
