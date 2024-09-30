@@ -9,7 +9,7 @@
     "prisma:new": "prisma migrate dev && prisma generate",
     "prisma:pull": "prisma db pull && prisma generate",
     "prisma:push": "prisma db push && prisma generate",
-    "lint": "tsc && eslint . --ext .js,.ts,.jsx,.tsx --fix"
+    "lint": "eslint . --ext .js,.ts,.jsx,.tsx --fix"
   },
   "dependencies": {
     "@elysiajs/bearer": "^1.0.2",

@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "lint": "tsc && eslint . --ext .js,.ts,.jsx,.tsx --fix"
+    "lint": "eslint . --ext .js,.ts,.jsx,.tsx --fix"
   },
   "dependencies": {
     "@elysiajs/eden": "^1.1.3",
