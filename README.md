@@ -1,6 +1,7 @@
 # Elysia with Bun runtime
 
 ## Why use bun and Elysia
+
 [Performance](https://elysiajs.com/at-glance.html#performance)
 
 Building on Bun and extensive optimization like Static Code Analysis allows Elysia to generate optimized code on the fly.
@@ -24,6 +25,7 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
 ![2024-05-06 12.51.00.png](https://s2.loli.net/2024/05/06/1TDsQYSHNvngmw9.png)
 
 ## Api docs
+
 ![_6-7-2024_2148_localhost.jpeg](https://s2.loli.net/2024/07/06/POZSw2aNh1D8LQY.jpg)
 
 ## Full stack development
@@ -32,16 +34,16 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
 
   Project structure
 
-    ```
+  ```
   .
   ├── package.json
   ├── node_modules
   └── packages
-      ├── frontend
-      │   └── package.json
-      └── backend
-          └── package.json
-    ```
+    ├── frontend
+    │   └── package.json
+    └── backend
+        └── package.json
+  ```
 
   Configuration is required for Workspace to take effect
 
@@ -49,17 +51,12 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
   {
     "name": "fullstack-for-bun-api",
     "version": "1.0.50",
-    "workspaces": [
-      "packages/*"
-    ],
-    "trustedDependencies": [
-      "@prisma/client",
-      "@prisma/engines",
-      "prisma"
-    ],
+    "workspaces": ["packages/*"],
+    "trustedDependencies": ["@prisma/client", "@prisma/engines", "prisma"],
     "scripts": {
       "dev": "bun --filter '*' dev",
       "build": "bun --filter '*' build",
+      "lint": "bun --filter '*' lint",
       "frontend": "bun run --filter frontend",
       "backend": "bun run --filter bun-api",
       "prisma:new": "bun backend prisma:new",
@@ -81,19 +78,17 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
   import { cors } from '@elysiajs/cors'
   import { swagger } from '@elysiajs/swagger'
   import { authorityService, userService } from './services'
-  
+
   const app = new Elysia()
     .use(cors({ origin: 'localhost:5173' }))
     .use(swagger())
     .use(authorityService)
     .use(userService)
-  
+
   app.listen(8090)
-  
+
   export type App = typeof app
   ```
-
-  
 
 - Frontend
 
@@ -113,21 +108,21 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
 
   ```tsx
   import server from '@/lib/server'
-  
+
   // in react
-    const login = useCallback(async () => {
-      if (verificationCode) {
-        // He is a complete input and output parameter type prompt.
-        const { data, error } = await server.authority.login.post({ email: email, randomCode: verificationCode })
-        if (!error) {
-          localStorage.setItem('token', data)
-        }
-        console.log('Login successful!')
-        location.reload()
-      } else {
-        console.log('Please enter a verification code!')
+  const login = useCallback(async () => {
+    if (verificationCode) {
+      // He is a complete input and output parameter type prompt.
+      const { data, error } = await server.authority.login.post({ email: email, randomCode: verificationCode })
+      if (!error) {
+        localStorage.setItem('token', data)
       }
-    }, [verificationCode, email])
+      console.log('Login successful!')
+      location.reload()
+    } else {
+      console.log('Please enter a verification code!')
+    }
+  }, [verificationCode, email])
   ```
 
 ## Development
@@ -147,6 +142,7 @@ bun run dev
 ```
 
 ## Build app
+
 ```shell
 bun run build
 ```
@@ -156,4 +152,3 @@ Open http://localhost:8090/ with your browser to see the result.
 Open http://localhost:8090/swagger with your browser to see the swagger.
 
 Open http://localhost:16686 with your browser to see the `jaeger` info.
-
