@@ -108,7 +108,7 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
 
   ```tsx
   import server from '@/lib/server'
-
+  
   // in react
   const login = useCallback(async () => {
     if (verificationCode) {
@@ -147,8 +147,8 @@ bun run dev
 bun run build
 ```
 
-Open http://localhost:8090/ with your browser to see the result.
+Open http://localhost:5173/ with your browser to see the `frontend` project.
+
+Open http://localhost:8090/ with your browser to see the `backend`  project.
 
 Open http://localhost:8090/swagger with your browser to see the swagger.
-
-Open http://localhost:16686 with your browser to see the `jaeger` info.
