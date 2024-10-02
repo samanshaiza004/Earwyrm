@@ -16,8 +16,6 @@ model Post {
   published Boolean  @default(false)
   authorId  Int
   User      User     @relation(fields: [authorId], references: [id])
-
-  @@index([authorId], map: "Post_authorId_fkey")
 }
 
 model Profile {
