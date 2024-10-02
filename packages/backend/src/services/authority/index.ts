@@ -33,7 +33,7 @@ export const authorityService = new Elysia()
         await connection.user.upsert({
           where: { email },
           update: { email },
-          create: { email, name: `用户${randomCode}` },
+          create: { email, name: `user${randomCode}` },
         })
         return await jwt.sign({ email })
       } else {
