@@ -20,7 +20,6 @@ const EmailLogin = () => {
         localStorage.setItem('token', data)
         console.log('Login successful!')
         location.reload()
-        return
       } else {
         console.log(`Login failed with the error message is ${error.value}.`)
       }
