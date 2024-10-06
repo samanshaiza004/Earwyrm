@@ -117,7 +117,6 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
         localStorage.setItem('token', data)
         console.log('Login successful!')
         location.reload()
-        return
       } else {
         console.log(`Login failed with the error message is ${error.value}.`)
       }
