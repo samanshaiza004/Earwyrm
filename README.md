@@ -108,17 +108,19 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
 
   ```tsx
   import server from '@/lib/server'
-  
+
   // in react
   const login = useCallback(async () => {
     if (verificationCode) {
-      // He is a complete input and output parameter type prompt.
       const { data, error } = await server.authority.login.post({ email: email, randomCode: verificationCode })
       if (!error) {
         localStorage.setItem('token', data)
+        console.log('Login successful!')
+        location.reload()
+        return
+      } else {
+        console.log(`Login failed with the error message is ${error.value}.`)
       }
-      console.log('Login successful!')
-      location.reload()
     } else {
       console.log('Please enter a verification code!')
     }
@@ -149,6 +151,6 @@ bun run build
 
 Open http://localhost:5173/ with your browser to see the `frontend` project.
 
-Open http://localhost:8090/ with your browser to see the `backend`  project.
+Open http://localhost:8090/ with your browser to see the `backend` project.
 
 Open http://localhost:8090/swagger with your browser to see the swagger.

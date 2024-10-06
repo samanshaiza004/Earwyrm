@@ -18,9 +18,12 @@ const EmailLogin = () => {
       const { data, error } = await server.authority.login.post({ email: email, randomCode: verificationCode })
       if (!error) {
         localStorage.setItem('token', data)
+        console.log('Login successful!')
+        location.reload()
+        return
+      } else {
+        console.log(`Login failed with the error message is ${error.value}.`)
       }
-      console.log('Login successful!')
-      location.reload()
     } else {
       console.log('Please enter a verification code!')
     }
