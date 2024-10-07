@@ -1,71 +1,30 @@
-import { Button, Input } from '@components/ui'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
-import server from '@/lib/server'
+export const description = "A simple login form with email and password. The submit button says 'Sign in'."
 
-const EmailLogin = () => {
-  const [email, setEmail] = useState('')
-  const [verificationCode, setVerificationCode] = useState('')
-  const [isRequestingCode, setIsRequestingCode] = useState(true)
-
-  const requestVerificationCode = useCallback(async () => {
-    await server.authority.get_verification_code.post({ email })
-    console.log(`A verification code has been sent to your email: ${email}`)
-    setIsRequestingCode(false)
-  }, [email])
-
-  const login = useCallback(async () => {
-    if (verificationCode) {
-      const { data, error } = await server.authority.login.post({ email: email, randomCode: verificationCode })
-      if (!error) {
-        localStorage.setItem('token', data)
-        console.log('Login successful!')
-        location.reload()
-      } else {
-        console.log(`Login failed with the error message is ${error.value}.`)
-      }
-    } else {
-      console.log('Please enter a verification code!')
-    }
-  }, [verificationCode, email])
-
+export function LoginForm() {
   return (
-    <div>
-      {isRequestingCode ? (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            if (email.includes('@')) {
-              requestVerificationCode()
-            } else {
-              alert('Please enter a valid email address！')
-            }
-          }}
-        >
-          <label>
-            email:
-            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          </label>
-          <Button type="submit">Send a verification code</Button>
-        </form>
-      ) : (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            login()
-          }}
-        >
-          <label>
-            verification code:
-            <Input type="text" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
-          </label>
-          <Button type="submit">登录</Button>
-          <Button type="button" onClick={() => setIsRequestingCode(true)}>
-            Resend the verification code
-          </Button>
-        </form>
-      )}
-    </div>
+    <Card className="w-full max-w-sm">
+      <CardHeader>
+        <CardTitle className="text-2xl">Login</CardTitle>
+        <CardDescription>Enter your email below to login to your account.</CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-4">
+        <div className="grid gap-2">
+          <Label htmlFor="email">Email</Label>
+          <Input id="email" type="email" placeholder="m@example.com" required />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="password">Password</Label>
+          <Input id="password" type="password" required />
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Button className="w-full">Sign in</Button>
+      </CardFooter>
+    </Card>
   )
 }
-
-export { EmailLogin }
