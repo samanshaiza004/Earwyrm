@@ -6,5 +6,11 @@
     ".eslintrc-auto-import.json",
     "code-style-lint-react-ts"
   ],
+  "overrides": [{
+    "files": ["src/components/ui/**/*.{ts,tsx}"],
+    "rules": {
+      "react/prop-types": "off"
+    }
+  }],
   "rules": {}
 }
