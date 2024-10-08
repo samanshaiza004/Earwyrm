@@ -1,6 +1,4 @@
-import './App.css'
-
-import { EmailLogin } from '@components/molecules'
+import { EmailLogin } from '@components/molecules/EmailLogin'
 import { User } from '@prisma/client'
 
 import server from '@/lib/server'
@@ -20,12 +18,14 @@ function App() {
   }, [])
 
   return (
-    <div className="App">
-      {users.map((user) => (
-        <div key={user.id}>
-          {user.name}----{user.email}
-        </div>
-      ))}
+    <div className="h-screen flex items-center justify-center">
+      <div className="flex flex-col gap-2">
+        {users.map((user) => (
+          <div key={user.id}>
+            {user.name}----{user.email}
+          </div>
+        ))}
+      </div>
       {!localStorage.getItem('token') && <EmailLogin />}
     </div>
   )

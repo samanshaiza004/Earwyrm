@@ -12,9 +12,9 @@ export const authorityService = new Elysia()
     '/authority/get_verification_code',
     async ({ body }) => {
       const { email } = body
-      const randomCode = (Math.random() * 1000000).toFixed(0)
-      redis.set(email, randomCode, 'EX', 60)
-      await sendEmail('test', 'The login verification code for this time is' + randomCode, email)
+      const verificationCode = (Math.random() * 1000000).toFixed(0)
+      redis.set(email, verificationCode, 'EX', 60)
+      await sendEmail('test', 'The login verification code for this time is ' + verificationCode, email)
       return 'The verification code was successfully obtained, please check it in your mailbox.'
     },
     {
@@ -24,16 +24,16 @@ export const authorityService = new Elysia()
   .post(
     '/authority/login',
     async ({ jwt, body, error }) => {
-      const { email, randomCode } = body
-      const preRandomCode = await redis.get(email)
-      if (!preRandomCode) {
+      const { email, verificationCode } = body
+      const preVerificationCode = await redis.get(email)
+      if (!preVerificationCode) {
         return error(400, 'Please get a verification code first.')
       }
-      if (randomCode === preRandomCode) {
+      if (verificationCode === preVerificationCode) {
         await connection.user.upsert({
           where: { email },
           update: { email },
-          create: { email, name: `user${randomCode}` },
+          create: { email, name: `user${verificationCode}` },
         })
         return await jwt.sign({ email })
       } else {
@@ -44,6 +44,6 @@ export const authorityService = new Elysia()
       }
     },
     {
-      body: t.Object({ randomCode: t.String(), email: t.String() }),
+      body: t.Object({ verificationCode: t.String(), email: t.String() }),
     },
   )
