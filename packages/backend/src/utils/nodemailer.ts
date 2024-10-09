@@ -3,21 +3,21 @@ import type Mail from 'nodemailer/lib/mailer'
 
 export function sendEmail(title: string, content: string, toMail: string) {
   const transporter = nodemailer.createTransport({
-    //node_modules/nodemailer/lib/well-known/services.json  查看相关的配置，如果使用qq邮箱，就查看qq邮箱的相关配置
+    //node_modules/nodemailer/lib/well-known/services.json  Check the relevant configurations, and if you use QQ mailbox, check the relevant configurations of QQ mailbox
     service: '163', //类型qq邮箱
     host: 'smtp.163.com',
     port: 465,
     secure: true,
     auth: {
-      user: Bun.env.NODEMAILER_AUTH_EMAIL, // 发送pnp方的邮箱
-      pass: Bun.env.NODEMAILER_AUTH_PASS, // smtp 的授权码
+      user: Bun.env.NODEMAILER_AUTH_EMAIL, // The email address of the PNP sender
+      pass: Bun.env.NODEMAILER_AUTH_PASS, // SMTP's authorization code
     },
   })
   const mailOptions: Mail.Options = {
-    from: { name: 'bun-api', address: Bun.env.NODEMAILER_AUTH_EMAIL }, // 发送方
-    to: toMail, //接收者邮箱，多个邮箱用逗号间隔
-    subject: title, // 标题
-    html: `<div>${content}</div>`, //页面内容
+    from: { name: 'bun-api', address: Bun.env.NODEMAILER_AUTH_EMAIL }, // sender
+    to: toMail, //Recipient mailboxes, multiple mailboxes are spaced with commas
+    subject: title, // title
+    html: `<div>${content}</div>`, //Email content
   }
   return transporter.sendMail(mailOptions)
 }
