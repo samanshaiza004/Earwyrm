@@ -17,7 +17,9 @@
     "backend": "bun run --filter bun-api",
     "prisma:new": "bun backend prisma:new",
     "prisma:pull": "bun backend prisma:pull",
-    "prisma:push": "bun backend prisma:push"
+    "prisma:push": "bun backend prisma:push",
+    "prisma:generate": "bun backend prisma:generate",
+    "docker:deploy": "docker-compose -f docker-compose-deploy.yml up -d --build"
   },
   "dependencies": {},
   "devDependencies": {

@@ -1,0 +1,34 @@
+services:
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+    ports:
+      - '3306:3306'
+    volumes:
+      - bun-api-mysql-data:/var/lib/mysql
+    restart: always
+
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+    volumes:
+      - bun-api-redis-data:/data
+    restart: always
+
+  fullstack:
+    build: .
+    container_name: fullstack
+    ports:
+      - '8090:8090'
+      - '5173:5173'
+    depends_on:
+      - redis
+      - mysql
+    environment:
+      MYSQL_DATABASE_URL: "mysql://root:my-secret-pw@mysql:3306/bun-api"
+
+volumes:
+  bun-api-mysql-data:
+  bun-api-redis-data:
