@@ -32,6 +32,9 @@ services:
     container_name: backend
     ports:
       - '8090:8090'
+    depends_on:
+      - mysql
+      - redis
 
 volumes:
   bun-api-mysql-data:
