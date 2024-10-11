@@ -5,7 +5,7 @@ RUN bun install
 
 ENV NODE_ENV=production
 RUN bun run prisma:generate
-RUN bun run build
+RUN bun run frontend:build
 
 FROM nginx:alpine AS frontend
 WORKDIR /app
