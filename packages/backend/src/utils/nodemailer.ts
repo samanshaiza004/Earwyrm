@@ -9,12 +9,12 @@ export function sendEmail(title: string, content: string, toMail: string) {
     port: 465,
     secure: true,
     auth: {
-      user: Bun.env.NODEMAILER_AUTH_EMAIL!, // The email address of the PNP sender
-      pass: Bun.env.NODEMAILER_AUTH_PASS!, // SMTP's authorization code
+      user: process.env.NODEMAILER_AUTH_EMAIL!, // The email address of the PNP sender
+      pass: process.env.NODEMAILER_AUTH_PASS!, // SMTP's authorization code
     },
   })
   const mailOptions: Mail.Options = {
-    from: { name: 'bun-api', address: Bun.env.NODEMAILER_AUTH_EMAIL! }, // sender
+    from: { name: 'bun-api', address: process.env.NODEMAILER_AUTH_EMAIL! }, // sender
     to: toMail, //Recipient mailboxes, multiple mailboxes are spaced with commas
     subject: title, // title
     html: `<div>${content}</div>`, //Email content
