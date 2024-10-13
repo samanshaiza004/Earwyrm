@@ -6,5 +6,6 @@ declare module 'bun' {
     readonly NODEMAILER_AUTH_PASS: string
     readonly REDIS_HOST: string
     readonly REDIS_PORT: string
+    readonly FRONTEND_PROJECT_URL: string
   }
 }

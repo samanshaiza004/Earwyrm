@@ -4,17 +4,24 @@ WORKDIR /app
 COPY . .
 RUN bun install
 
+# For prisma，by default, only .env files are loaded. Use in docker-compose.
+RUN sed -i 's/localhost:3306/mysql:3306/g' ./packages/backend/.env
+RUN sed -i 's/localhost:3306/mysql:3306/g' ./packages/backend/.env.local
+RUN sed -i 's/REDIS_HOST = localhost/REDIS_HOST = redis/g' ./packages/backend/.env
+RUN sed -i 's/REDIS_HOST = localhost/REDIS_HOST = redis/g' ./packages/backend/.env.local
+
 ENV NODE_ENV=production
 RUN bun run prisma:generate
 RUN bun run backend:docker-build
 
-FROM gcr.io/distroless/base AS backend
-WORKDIR /app
-COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=build /app/packages/backend/server server
+# TODO Waiting for a good solution, there is an error stating that openssl does not have the issue.
+#FROM gcr.io/distroless/base AS backend
+#WORKDIR /app
+#COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
+#COPY --from=build /app/packages/backend/server server
 
 ENV NODE_ENV=production
 
-CMD ["./server"]
+CMD ["./packages/backend/server"]
 
 EXPOSE 8090
