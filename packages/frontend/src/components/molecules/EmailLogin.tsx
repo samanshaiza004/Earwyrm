@@ -45,9 +45,12 @@ export function EmailLogin() {
     }
   }
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
+        <CardTitle className="text-2xl">
+          <img src="https://elysiajs.com/assets/elysia.svg" alt="elysia" />
+          Login Bun+Elysia+Prisma+React+Tailwindcss
+        </CardTitle>
         <CardDescription>Enter your email below to login to your account.</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
