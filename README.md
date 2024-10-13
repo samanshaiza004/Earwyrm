@@ -28,6 +28,10 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
 
 ![_6-7-2024_2148_localhost.jpeg](https://s2.loli.net/2024/07/06/POZSw2aNh1D8LQY.jpg)
 
+## Frontend web
+
+![2024-10-14 00.02.46.png](https://s2.loli.net/2024/10/14/iYnoLk8QFrzuOs1.png)
+
 ## Full stack development
 
 - Bun workspaces
@@ -91,8 +95,6 @@ Elysia can outperform most of the web frameworks available today[[1\]](https://e
   ```
 
 - Frontend
-
-  ![2024-10-14 00.02.46.png](https://s2.loli.net/2024/10/14/iYnoLk8QFrzuOs1.png)
 
   lib/server.ts
 
