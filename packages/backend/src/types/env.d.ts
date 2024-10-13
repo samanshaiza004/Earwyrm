@@ -4,5 +4,7 @@ declare module 'bun' {
     readonly JWT_SECRETS: string
     readonly NODEMAILER_AUTH_EMAIL: string
     readonly NODEMAILER_AUTH_PASS: string
+    readonly REDIS_HOST: string
+    readonly REDIS_PORT: string
   }
 }
