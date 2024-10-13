@@ -5,11 +5,7 @@ import { Elysia } from 'elysia'
 
 import { authorityService, userService } from './services'
 
-const app = new Elysia()
-  .use(cors({ origin: process.env.FRONTEND_PROJECT_URL! }))
-  .use(swagger())
-  .use(authorityService)
-  .use(userService)
+const app = new Elysia().use(cors()).use(swagger()).use(authorityService).use(userService)
 
 app.listen(8090)
 
