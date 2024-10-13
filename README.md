@@ -146,11 +146,17 @@ bun run prisma:push
 bun run dev
 ```
 
-## Build app
+## Deploy app
 
 ```shell
-bun run build
+bun run docker:deploy
 ```
+or
+
+```shell
+docker-compose -f docker-compose-deploy.yml up -d --build
+```
+
 
 Open http://localhost:5173/ with your browser to see the `frontend` project.
 
