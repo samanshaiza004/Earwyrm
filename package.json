@@ -20,6 +20,7 @@
     "prisma:new": "bun backend prisma:new",
     "prisma:pull": "bun backend prisma:pull",
     "prisma:push": "bun backend prisma:push",
+    "prisma:deploy": "bun backend prisma:deploy",
     "prisma:generate": "bun backend prisma:generate",
     "docker:deploy": "docker-compose -f docker-compose-deploy.yml up -d --build"
   },

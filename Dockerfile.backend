@@ -15,7 +15,7 @@ RUN bun run prisma:generate
 RUN bun run backend:docker-build
 
 # TODO Waiting for a good solution, there is an error stating that openssl does not have the issue.
-#FROM gcr.io/distroless/base AS backend
+#FROM gcr.io/distroless/base AS deploy
 #WORKDIR /app
 #COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
 #COPY --from=build /app/packages/backend/server server
