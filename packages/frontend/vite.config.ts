@@ -22,7 +22,7 @@ export default ({ command, mode }: ConfigEnv) => {
         },
       }),
     ],
-    //项目部署的基础路径,
+    //The base path of the project deployment
     base: currentEnv.VITE_PUBLIC_PATH,
     mode: mode,
     resolve: {
@@ -36,11 +36,8 @@ export default ({ command, mode }: ConfigEnv) => {
         '@hooks': resolve(__dirname, './src/hooks'),
       },
     },
-    //服务
     server: {
-      //自定义代理---解决跨域
       proxy: {
-        // 选项写法
         '/api': {
           target: 'http://localhost:8090',
           changeOrigin: true,
