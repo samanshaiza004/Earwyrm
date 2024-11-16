@@ -1,33 +1,27 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { EmailLogin } from '@components/molecules/EmailLogin'
-import { User } from '@prisma/client'
-
-import server from '@/lib/server'
+import { ProtectedRoute } from '@components/atoms/ProtectedRoute'
+import { AuthProvider } from '@/contexts/AuthContext'
+import { Home } from '@/pages/Home'
 
 function App() {
-  const [users, setUsers] = useState<User[]>([])
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      server.user.get().then((res) => {
-        if (res.error) {
-          localStorage.removeItem('token')
-          return location.reload()
-        }
-        setUsers(res.data)
-      })
-    }
-  }, [])
-
   return (
-    <div className="h-screen flex items-center justify-center">
-      <div className="flex flex-col gap-2">
-        {users.map((user) => (
-          <div key={user.id}>
-            {user.name}----{user.email}
-          </div>
-        ))}
-      </div>
-      {!localStorage.getItem('token') && <EmailLogin />}
-    </div>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<EmailLogin />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 

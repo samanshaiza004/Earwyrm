@@ -7,28 +7,85 @@ datasource db {
   url      = env("MYSQL_DATABASE_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-  title     String   @db.VarChar(255)
-  content   String?
-  published Boolean  @default(false)
-  authorId  Int
-  User      User     @relation(fields: [authorId], references: [id])
+model User {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  username      String    @unique
+  passwordHash  String
+  name          String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  profile       Profile?
+  posts         Post[]
+  comments      Comment[]
+  followers     Follow[]  @relation("following")
+  following     Follow[]  @relation("follower")
 }
 
 model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  userId Int     @unique
-  User   User    @relation(fields: [userId], references: [id])
+  id          Int       @id @default(autoincrement())
+  bio         String?   @db.Text
+  avatarUrl   String?
+  websiteUrl  String?
+  location    String?
+  userId      Int       @unique
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
-model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  name    String?
-  Post    Post[]
-  Profile Profile?
+model Post {
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(255)
+  description String?   @db.Text
+  audioUrl    String    // URL to stored audio file
+  duration    Float     // Duration in seconds
+  waveform    Json?     // Stored waveform data for visualization
+  plays       Int       @default(0)
+  isPublic    Boolean   @default(true)
+  tags        Tag[]
+  authorId    Int
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments    Comment[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([authorId])
+}
+
+model Comment {
+  id          Int       @id @default(autoincrement())
+  content     String    @db.Text
+  timestamp   Float?    // Optional timestamp in seconds
+  postId      Int
+  post        Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId    Int
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([postId])
+  @@index([authorId])
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  posts     Post[]
+  createdAt DateTime @default(now())
+
+  @@index([name])
+}
+
+model Follow {
+  id          Int      @id @default(autoincrement())
+  followerId  Int
+  followingId Int
+  follower    User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
 }
