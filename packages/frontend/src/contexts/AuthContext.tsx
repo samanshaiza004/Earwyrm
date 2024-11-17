@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { User } from '@prisma/client'
-import server from '@/lib/server'
+import { userService } from '@/services/user.service'
 
 interface AuthContextType {
   user: User | null
@@ -22,15 +22,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const checkAuth = async () => {
     try {
-      const res = await server.user.get()
-      if (res.error) {
+      const token = localStorage.getItem('token')
+      const username = localStorage.getItem('username')
+      
+      if (!token || !username) {
         setUser(null)
-      } else {
-        // Ensure we're setting a single user, not an array
-        setUser(Array.isArray(res.data) ? res.data[0] || null : res.data)
+        setIsLoading(false)
+        return
       }
+
+      // Update auth headers for the current session
+      if (token) {
+        userService.headers = {
+          ...userService.headers,
+          'Authorization': `Bearer ${token}`
+        }
+      }
+
+      // Fetch user profile
+      const userProfile = await userService.getUserByUsername(username)
+      setUser(userProfile)
     } catch (error) {
+      console.error('Failed to check auth status:', error)
       setUser(null)
+      localStorage.removeItem('token')
+      localStorage.removeItem('username')
     } finally {
       setIsLoading(false)
     }
@@ -40,8 +56,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     checkAuth()
   }, [])
 
-  const logout = async () => {
-    await (server as any).auth.logout()
+  const logout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('username')
     setUser(null)
     window.location.href = '/login'
   }

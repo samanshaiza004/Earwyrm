@@ -65,19 +65,29 @@ export const api = new Elysia({ prefix: '/api' })
       password: t.String({ minLength: 8 })
     })
   })
-  .post('/auth/login', async ({ body, jwt, cookie: { auth } }) => {
+  .post('/auth/login', async ({ body }) => {
     const { email, password } = body;
     
     const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) throw new Error('Invalid credentials');
+    if (!user) throw new Error('User not found');
     
-    const valid = await bcrypt.compare(password, user.passwordHash);
-    if (!valid) throw new Error('Invalid credentials');
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) throw new Error('Invalid password');
     
-    const token = await jwt.sign({ sub: String(user.id) });    
-    auth.value = token;
+    const token = await jwt.sign({ 
+      sub: user.id.toString(),
+      email: user.email,
+      username: user.username
+    });
     
-    return { token };
+    return { 
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username
+      }
+    };
   }, {
     body: t.Object({
       email: t.String({ format: 'email' }),
@@ -173,4 +183,50 @@ export const api = new Elysia({ prefix: '/api' })
     params: t.Object({
       postId: t.Numeric()
     })
-  });
+  })
+
+  // User profile routes
+  .get('/user/:username', async ({ params, user: currentUser }) => {
+    if (!currentUser) {
+      throw new Error('Not authenticated');
+    }
+
+    const profile = await prisma.user.findUnique({
+      where: { username: params.username },
+      include: {
+        profile: true,
+        _count: {
+          select: {
+            followers: true,
+            following: true,
+            posts: true
+          }
+        }
+      }
+    });
+
+    if (!profile) {
+      throw new Error('User not found');
+    }
+
+    // Remove sensitive information
+    const { password, ...safeProfile } = profile;
+    return safeProfile;
+  })
+
+  .put('/user/:username/profile', async ({ params, user, body }) => {
+    if (!user || user.username !== params.username) {
+      throw new Error('Unauthorized');
+    }
+
+    const updatedProfile = await prisma.profile.upsert({
+      where: { userId: user.id },
+      create: {
+        ...body,
+        userId: user.id
+      },
+      update: body
+    });
+
+    return updatedProfile;
+  })

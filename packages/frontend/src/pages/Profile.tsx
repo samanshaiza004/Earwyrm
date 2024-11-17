@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
-import { UserCircle, Mail, Calendar, MapPin, Link as LinkIcon } from 'lucide-react'
+import { UserCircle, Mail, Calendar, MapPin, Link as LinkIcon, Edit } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Card,
@@ -13,13 +13,17 @@ import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { userService, type UserProfile } from '@/services/user.service'
 import { useEffect, useState } from 'react'
+import { formatDistanceToNow } from 'date-fns'
 
 export function Profile() {
-  const { userId } = useParams()
-  const { user } = useAuth()
+  const { username } = useParams()
+  const { user: currentUser } = useAuth()
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
   const [profile, setProfile] = useState<UserProfile | null>(null)
+  const [isEditing, setIsEditing] = useState(false)
+
+  const isOwnProfile = currentUser?.username === username || !username
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -27,11 +31,11 @@ export function Profile() {
         setIsLoading(true)
         setError(null)
         
-        if (userId) {
-          const data = await userService.getUserById(userId)
-          setProfile(data)
-        } else {
+        if (isOwnProfile) {
           const data = await userService.getCurrentUser()
+          setProfile(data)
+        } else if (username) {
+          const data = await userService.getUserByUsername(username)
           setProfile(data)
         }
       } catch (err) {
@@ -42,17 +46,32 @@ export function Profile() {
     }
 
     fetchProfile()
-  }, [userId])
+  }, [username, isOwnProfile])
 
   if (error) {
     return (
       <div className="container max-w-4xl mx-auto px-4 py-8">
         <Alert variant="destructive">
           <AlertTitle>Error</AlertTitle>
-          <AlertDescription>
-            {error.message || 'An error occurred while loading the profile'}
-          </AlertDescription>
+          <AlertDescription>{error.message}</AlertDescription>
         </Alert>
+      </div>
+    )
+  }
+
+  if (isLoading || !profile) {
+    return (
+      <div className="container max-w-4xl mx-auto px-4 py-8">
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-12 w-48" />
+            <Skeleton className="h-4 w-32" />
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+          </CardContent>
+        </Card>
       </div>
     )
   }
@@ -60,88 +79,75 @@ export function Profile() {
   return (
     <div className="container max-w-4xl mx-auto px-4 py-8">
       <Card>
-        <CardHeader>
-          <div className="flex items-start gap-4">
-            {isLoading ? (
-              <Skeleton className="h-24 w-24 rounded-full" />
-            ) : profile?.avatarUrl ? (
-              <img
-                src={profile.avatarUrl}
-                alt={`${profile.name || 'User'}'s avatar`}
-                className="h-24 w-24 rounded-full object-cover"
-              />
-            ) : (
-              <div className="h-24 w-24 rounded-full bg-muted flex items-center justify-center">
-                <UserCircle className="h-16 w-16 text-muted-foreground" />
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="text-2xl flex items-center gap-2">
+              {profile.profile?.avatarUrl ? (
+                <img 
+                  src={profile.profile.avatarUrl} 
+                  alt={profile.username} 
+                  className="w-12 h-12 rounded-full"
+                />
+              ) : (
+                <UserCircle className="w-12 h-12" />
+              )}
+              <span>{profile.name || profile.username}</span>
+            </CardTitle>
+            <CardDescription>@{profile.username}</CardDescription>
+          </div>
+          {isOwnProfile && (
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setIsEditing(true)}
+            >
+              <Edit className="w-4 h-4 mr-2" />
+              Edit Profile
+            </Button>
+          )}
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {profile.profile?.bio && (
+            <p className="text-muted-foreground">{profile.profile.bio}</p>
+          )}
+          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <Mail className="w-4 h-4" />
+              {profile.email}
+            </div>
+            {profile.profile?.location && (
+              <div className="flex items-center gap-1">
+                <MapPin className="w-4 h-4" />
+                {profile.profile.location}
               </div>
             )}
-            <div className="flex-1">
-              {isLoading ? (
-                <div className="space-y-2">
-                  <Skeleton className="h-8 w-[200px]" />
-                  <Skeleton className="h-4 w-[160px]" />
-                </div>
-              ) : (
-                <>
-                  <CardTitle className="text-2xl">
-                    {profile?.name || 'Anonymous User'}
-                  </CardTitle>
-                  <CardDescription>{profile?.email}</CardDescription>
-                  {profile?.bio && (
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      {profile.bio}
-                    </p>
-                  )}
-                </>
-              )}
-            </div>
-            {user?.id === profile?.id && (
-              <Button variant="outline">Edit Profile</Button>
+            {profile.profile?.websiteUrl && (
+              <div className="flex items-center gap-1">
+                <LinkIcon className="w-4 h-4" />
+                <a 
+                  href={profile.profile.websiteUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:underline"
+                >
+                  {profile.profile.websiteUrl}
+                </a>
+              </div>
             )}
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-2">
-            {isLoading ? (
-              <>
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="h-8 w-full" />
-              </>
-            ) : (
-              <>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Mail className="h-4 w-4" />
-                  <span>{profile?.email}</span>
-                </div>
-                {profile?.location && (
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <MapPin className="h-4 w-4" />
-                    <span>{profile.location}</span>
-                  </div>
-                )}
-                {profile?.website && (
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <LinkIcon className="h-4 w-4" />
-                    <a
-                      href={profile.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:underline"
-                    >
-                      {profile.website}
-                    </a>
-                  </div>
-                )}
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Calendar className="h-4 w-4" />
-                  <span>
-                    Joined {new Date(profile?.joinedDate).toLocaleDateString()}
-                  </span>
-                </div>
-              </>
-            )}
+          <div className="flex gap-4 pt-4 border-t">
+            <div>
+              <span className="font-medium">{profile._count?.posts || 0}</span>
+              <span className="text-muted-foreground ml-1">Posts</span>
+            </div>
+            <div>
+              <span className="font-medium">{profile._count?.followers || 0}</span>
+              <span className="text-muted-foreground ml-1">Followers</span>
+            </div>
+            <div>
+              <span className="font-medium">{profile._count?.following || 0}</span>
+              <span className="text-muted-foreground ml-1">Following</span>
+            </div>
           </div>
         </CardContent>
       </Card>

@@ -90,33 +90,35 @@ export function EmailLogin() {
         setError('Please enter your email and verification code')
         return
       }
-      console.log('[Login] Attempting login with email:', email);
+      
       const response = await server.authority.login.post({ email, verificationCode })
-      console.log('[Login] Full response:', response);
       
       if (response.error) {
         const errorString = response.error instanceof Error ? response.error.message : String(response.error)
-        console.error('[Login] Login failed:', errorString);
+        console.error('[Login] Login failed:', errorString)
         setError(errorString)
       } else if (response.data?.success && response.data?.data?.token) {
-        // The token is nested in response.data.data.token
-        const token = response.data.data.token;
-        console.log('[Login] Token found in response');
-        localStorage.setItem('token', token);
+        const { token, user } = response.data.data
         
-        // Verify token was stored
-        const storedToken = localStorage.getItem('token');
-        console.log('[Login] Token stored in localStorage:', !!storedToken);
+        // Store auth data
+        localStorage.setItem('token', token)
+        localStorage.setItem('username', user.username)
+        
+        // Update auth headers for future requests
+        server.headers = {
+          ...server.headers,
+          'Authorization': `Bearer ${token}`
+        }
         
         // Redirect to home page
         window.location.href = '/'
       } else {
-        console.error('[Login] Unexpected response structure:', response);
+        console.error('[Login] Unexpected response structure:', response)
         setError('Authentication failed: Invalid response format')
       }
     } catch (err) {
       const errorString = err instanceof Error ? err.message : 'An unexpected error occurred. Please try again.'
-      console.error('[Login] Login error:', errorString);
+      console.error('[Login] Login error:', errorString)
       setError(errorString)
     } finally {
       setIsLoading(false)
@@ -124,86 +126,94 @@ export function EmailLogin() {
   }
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle className="text-2xl flex items-center gap-2">
-          <img src="https://elysiajs.com/assets/elysia.svg" alt="elysia" className="w-8 h-8" />
-          <span>Welcome to Earwyrm</span>
-        </CardTitle>
-        <CardDescription>
-          {isVerificationCodeMode
-            ? 'Enter your email to receive a verification code.'
-            : 'Enter the verification code sent to your email.'}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-4">
-        {error && (
-          <Alert variant="destructive">
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-        <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
-          <Input 
-            id="email" 
-            type="email" 
-            placeholder="m@example.com" 
-            required 
-            ref={emailInputRef}
-            disabled={isLoading || (!isVerificationCodeMode && countdown > 0)}
-            className={cn(
-              !isVerificationCodeMode && "opacity-50"
-            )}
-          />
-        </div>
-        {!isVerificationCodeMode && (
-          <div className="grid gap-2">
-            <Label htmlFor="verificationCode">Verification Code</Label>
+    <div className="min-h-screen w-full flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-900">
+      <Card className="w-full max-w-md mx-auto shadow-lg">
+        <CardHeader className="space-y-4">
+          <CardTitle className="text-2xl flex items-center justify-center gap-3">
+            <img 
+              src="https://elysiajs.com/assets/elysia.svg" 
+              alt="elysia" 
+              className="w-8 h-8 sm:w-10 sm:h-10" 
+            />
+            <span className="text-xl sm:text-2xl font-bold">Welcome to Earwyrm</span>
+          </CardTitle>
+          <CardDescription className="text-center text-sm sm:text-base">
+            {isVerificationCodeMode
+              ? 'Enter your email to receive a verification code.'
+              : 'Enter the verification code sent to your email.'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6 px-4 sm:px-6">
+          {error && (
+            <Alert variant="destructive" className="text-sm">
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-sm font-medium">Email</Label>
             <Input 
-              id="verificationCode" 
-              type="text" 
+              id="email" 
+              type="email" 
+              placeholder="m@example.com" 
               required 
-              ref={verificationCodeInputRef}
-              disabled={isLoading}
-              placeholder="Enter the 6-digit code"
-              maxLength={6}
+              ref={emailInputRef}
+              disabled={isLoading || (!isVerificationCodeMode && countdown > 0)}
+              className={cn(
+                "h-10",
+                !isVerificationCodeMode && "opacity-50"
+              )}
             />
           </div>
-        )}
-      </CardContent>
-      <CardFooter className="flex flex-col gap-2">
-        <Button 
-          className="w-full" 
-          onClick={isVerificationCodeMode ? onGetVerificationCode : onSubmit}
-          disabled={isLoading || (isVerificationCodeMode && countdown > 0)}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {isVerificationCodeMode ? 'Sending Code...' : 'Signing In...'}
-            </>
-          ) : isVerificationCodeMode ? (
-            'Get Verification Code'
-          ) : (
-            'Sign In'
+          {!isVerificationCodeMode && (
+            <div className="space-y-2">
+              <Label htmlFor="verificationCode" className="text-sm font-medium">Verification Code</Label>
+              <Input 
+                id="verificationCode" 
+                type="text" 
+                required 
+                ref={verificationCodeInputRef}
+                disabled={isLoading}
+                placeholder="Enter the 6-digit code"
+                maxLength={6}
+                className="h-10"
+              />
+            </div>
           )}
-        </Button>
-        {!isVerificationCodeMode && (
+        </CardContent>
+        <CardFooter className="flex flex-col gap-3 px-4 sm:px-6 pb-6">
           <Button 
-            variant="ghost" 
-            className="w-full"
-            onClick={() => setIsVerificationCodeMode(true)}
-            disabled={countdown > 0}
+            className="w-full h-10 text-sm sm:text-base" 
+            onClick={isVerificationCodeMode ? onGetVerificationCode : onSubmit}
+            disabled={isLoading || (isVerificationCodeMode && countdown > 0)}
           >
-            {countdown > 0 ? (
-              `Request new code in ${countdown}s`
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {isVerificationCodeMode ? 'Sending Code...' : 'Signing In...'}
+              </>
+            ) : isVerificationCodeMode ? (
+              'Get Verification Code'
             ) : (
-              'Request New Code'
+              'Sign In'
             )}
           </Button>
-        )}
-      </CardFooter>
-    </Card>
+          {!isVerificationCodeMode && (
+            <Button 
+              variant="ghost" 
+              className="w-full h-10 text-sm sm:text-base"
+              onClick={() => setIsVerificationCodeMode(true)}
+              disabled={countdown > 0}
+            >
+              {countdown > 0 ? (
+                `Request new code in ${countdown}s`
+              ) : (
+                'Request New Code'
+              )}
+            </Button>
+          )}
+        </CardFooter>
+      </Card>
+    </div>
   )
 }

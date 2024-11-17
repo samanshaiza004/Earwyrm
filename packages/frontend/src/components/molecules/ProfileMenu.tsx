@@ -32,7 +32,7 @@ export function ProfileMenu() {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link to="/profile" className="cursor-pointer">
+          <Link to={user?.username ? `/user/${user.username}` : '#'} className="cursor-pointer">
             Profile
           </Link>
         </DropdownMenuItem>
